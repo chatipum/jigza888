@@ -163,6 +163,9 @@ export default function PageGame() {
 									<button
 										type="button"
 										key={choice}
+										disabled={choiceList.some(
+											(selectedChoice) => choice === selectedChoice,
+										)}
 										className={clsx(
 											"bg-black z-10 flex items-center justify-center border border-white hover:bg-gray-500 cursor-pointer",
 											{
