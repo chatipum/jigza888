@@ -12,7 +12,7 @@ export default function PageGame() {
 	const [score, setScore] = useState<number>(100);
 	const [image, setImage] = useState<string | null>(null);
 	const [player, setPlayer] = useState<Players | null>(null);
-	const [newPlayer, setNewPlayer] = useState<Players | null>(null);
+	const [newPlayerName, setNewPlayerName] = useState<string>("");
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -118,7 +118,9 @@ export default function PageGame() {
 								id="grid-state"
 								value={player?.id ?? ""}
 								onChange={(e) => {
-									const selectedPlayer = playersStorage.find(
+									console.log(e);
+
+									const selectedPlayer = playerList.find(
 										(val) => val.id.toString() === e.target.value,
 									);
 
@@ -130,7 +132,7 @@ export default function PageGame() {
 								<option value="" disabled>
 									Select Player
 								</option>
-								{playersStorage.map((player) => (
+								{playerList.map((player) => (
 									<option key={player.id} value={player.id}>
 										{player.name}
 									</option>
@@ -336,13 +338,28 @@ export default function PageGame() {
 						<h3 className="text-3xl">Add Player</h3>
 						<button
 							type="button"
-							disabled={!newPlayer}
+							disabled={!newPlayerName}
 							className="rounded-full bg-white h-8 w-8 flex justify-center items-center disabled:opacity-20"
-							onClick={() => {
-								if (newPlayer) {
-									setPlayerStorage((prev) => [...prev, newPlayer]);
-									setNewPlayer(null);
+							onClick={(e) => {
+								e.preventDefault();
+
+								const lastPlayer =
+									playersStorage.length === 1
+										? playersStorage[0]
+										: playersStorage.sort((a, b) => a.id - b.id).pop();
+
+								if (lastPlayer) {
+									setPlayerStorage((prev) => [
+										...prev,
+										{
+											id: lastPlayer.id + 1,
+											name: newPlayerName,
+											score: 0,
+										},
+									]);
 								}
+
+								setNewPlayerName("");
 							}}
 						>
 							<svg
@@ -364,17 +381,13 @@ export default function PageGame() {
 					</div>
 					<div>
 						<input
-							value={newPlayer?.name ?? ""}
+							value={newPlayerName}
 							className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							id="player-name"
 							type="text"
 							placeholder="player name"
 							onChange={(e) => {
-								setNewPlayer({
-									id: playersStorage.length + 1,
-									name: e.target.value,
-									score: 0,
-								});
+								setNewPlayerName(e.target.value);
 							}}
 						/>
 					</div>
