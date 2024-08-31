@@ -1,6 +1,7 @@
 "use client";
 
 import type { Players } from "@/atom";
+import CardAddPlayer from "@/components/CardAddPlayer";
 import { usePlayers } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +11,6 @@ export default function Home() {
 	const router = useRouter();
 
 	const [players, setPlayers] = useState<Players[]>([]);
-	const [player, setPlayer] = useState<Players | null>(null);
 
 	useEffect(() => {
 		setPlayers(playersStorage);
@@ -19,53 +19,8 @@ export default function Home() {
 	return (
 		<main className="relative h-screen bg-[url('https://images2.alphacoders.com/128/thumb-1920-1281008.jpg')]">
 			<article className="container max-w-4xl mx-auto flex flex-col justify-center items-center h-full space-y-4">
-				<section className="w-[25rem] bg-black rounded-lg backdrop-blur-md bg-opacity-30 border border-gray-100 p-4">
-					<div className="pb-4 flex flex-row justify-between items-center">
-						<h3 className="text-3xl">Add Player</h3>
-						<button
-							type="button"
-							disabled={!player}
-							className="rounded-full bg-white h-8 w-8 flex justify-center items-center disabled:opacity-20"
-							onClick={() => {
-								if (player) {
-									setPlayers((prev) => [...prev, player]);
-									setPlayer(null);
-								}
-							}}
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								strokeWidth="2"
-								stroke="currentColor"
-								className="size-8 text-black"
-							>
-								<title>icon-plus</title>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									d="M12 4.5v15m7.5-7.5h-15"
-								/>
-							</svg>
-						</button>
-					</div>
-					<div>
-						<input
-							value={player?.name ?? ""}
-							className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-							id="player-name"
-							type="text"
-							placeholder="player name"
-							onChange={(e) => {
-								setPlayer({
-									id: players.length + 1,
-									name: e.target.value,
-									score: 0,
-								});
-							}}
-						/>
-					</div>
+				<section className="w-[25rem]">
+					<CardAddPlayer />
 				</section>
 				<section className="flex flex-wrap space-x-4">
 					{players.map((player) => (
