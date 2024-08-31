@@ -177,7 +177,7 @@ export default function PageGame() {
 										onClick={() => {
 											setChoiceList((prev) => [...prev, choice]);
 											if (choiceList.length > 1) {
-												setScore((prev) => prev - 25);
+												setScore((prev) => prev - 5);
 											}
 										}}
 									>
