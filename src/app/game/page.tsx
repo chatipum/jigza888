@@ -67,7 +67,6 @@ export default function PageGame() {
 							<span>Point:</span>
 							<span>{score}</span>
 						</div>
-						{JSON.stringify(playersStorage)}
 						<button
 							type="button"
 							disabled={!player || choiceList.length < 2}
