@@ -1,6 +1,6 @@
-import { useAtom } from "jotai";
-import { atomPlayers } from "./atom";
+import { useContext } from "react";
+import { PlayerCtx } from "./app/Provider";
 
 export function usePlayers() {
-	return useAtom(atomPlayers);
+	return useContext(PlayerCtx);
 }

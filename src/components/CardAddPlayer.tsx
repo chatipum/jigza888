@@ -2,7 +2,7 @@ import { usePlayers } from "@/hooks";
 import { useState } from "react";
 
 export default function CardAddPlayer() {
-	const [playersStorage, setPlayerStorage] = usePlayers();
+	const { players, setPlayers } = usePlayers();
 
 	const [newPlayerName, setNewPlayerName] = useState<string>("");
 
@@ -18,14 +18,12 @@ export default function CardAddPlayer() {
 						e.preventDefault();
 
 						const lastPlayer =
-							playersStorage.length === 1
-								? playersStorage[0]
-								: playersStorage.sort((a, b) => a.id - b.id)[
-										playersStorage.length - 1
-									];
+							players.length === 1
+								? players[0]
+								: players.sort((a, b) => a.id - b.id)[players.length - 1];
 
-						if (lastPlayer) {
-							setPlayerStorage((prev) => [
+						if (lastPlayer && setPlayers) {
+							setPlayers((prev) => [
 								...prev,
 								{
 									id: lastPlayer.id + 1,
