@@ -2,29 +2,33 @@
 
 import type { Players } from "@/atom";
 import CardAddPlayer from "@/components/CardAddPlayer";
+import CardLeaderBoard from "@/components/CardLeaderBoard";
 import { usePlayers } from "@/hooks";
 import clsx from "clsx";
 import { useMemo, useRef, useState } from "react";
 
 export default function PageGame() {
-	const [playersStorage, setPlayerStorage] = usePlayers();
+	const { players, setPlayers } = usePlayers();
 
 	const [choiceList, setChoiceList] = useState<number[]>([0]);
 	const [score, setScore] = useState<number>(100);
 	const [image, setImage] = useState<string | null>(null);
 	const [player, setPlayer] = useState<Players | null>(null);
-	const [newPlayerName, setNewPlayerName] = useState<string>("");
+	const [fileInputKey, setFileInputKey] = useState<string>("file-input-key-1");
 
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const readerImage = (file: File | undefined) => {
 		const reader = new FileReader();
 
-		reader.onload = async (e) => {
-			setImage(e.target?.result?.toString() ?? null);
-		};
-
 		file && reader.readAsDataURL(file);
+
+		reader.onloadend = () => {
+			const base64data = reader.result;
+			if (typeof base64data === "string") {
+				setImage(base64data);
+			}
+		};
 	};
 
 	const init = () => {
@@ -39,13 +43,13 @@ export default function PageGame() {
 	};
 
 	const onSave = () => {
-		if (player) {
-			const playerIndex = playersStorage.indexOf(player);
-			const currentPlayer = playersStorage[playerIndex];
-			const newPlayerList = playersStorage.filter(
+		if (player && setPlayers) {
+			const playerIndex = players.indexOf(player);
+			const currentPlayer = players[playerIndex];
+			const newPlayerList = players.filter(
 				(val) => val.id !== currentPlayer.id,
 			);
-			setPlayerStorage([
+			setPlayers([
 				...newPlayerList,
 				{ ...currentPlayer, score: currentPlayer.score + score },
 			]);
@@ -55,8 +59,8 @@ export default function PageGame() {
 	};
 
 	const playerList = useMemo(
-		() => playersStorage.sort((a, b) => b.score - a.score),
-		[playersStorage],
+		() => players.sort((a, b) => b.score - a.score),
+		[players],
 	);
 
 	return (
@@ -119,8 +123,6 @@ export default function PageGame() {
 								id="grid-state"
 								value={player?.id ?? ""}
 								onChange={(e) => {
-									console.log(e);
-
 									const selectedPlayer = playerList.find(
 										(val) => val.id.toString() === e.target.value,
 									);
@@ -253,14 +255,15 @@ export default function PageGame() {
 							<span>Paste Image URL</span>
 						</button>
 						<input
+							key={fileInputKey}
 							ref={inputRef}
-							className="hidden"
 							type="file"
+							accept="image/jpeg,image/png,image/webp"
 							onChange={(event) => {
-								init();
-
 								readerImage(event.target.files?.[0]);
+								setFileInputKey(`file-input-key-${Math.random()}`);
 							}}
+							className="hidden"
 						/>
 					</div>
 
@@ -323,16 +326,8 @@ export default function PageGame() {
 						<span>Scoreboard</span>
 					</p>
 				</div>
-				<section className="rounded-lg border-2 bg-black/80 shadow-2xl shadow-white/50 flex flex-col space-y-4 justify-center p-4">
-					{playerList.map((player) => (
-						<div
-							key={player.id}
-							className="flex flex-row w-full justify-between border-2 p-2 rounded-lg bg-white text-black"
-						>
-							<div>{player.name}</div>
-							<div>{player.score}</div>
-						</div>
-					))}
+				<section>
+					<CardLeaderBoard />
 				</section>
 				<section>
 					<CardAddPlayer />

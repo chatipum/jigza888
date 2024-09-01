@@ -1,20 +1,12 @@
 "use client";
 
-import type { Players } from "@/atom";
 import CardAddPlayer from "@/components/CardAddPlayer";
 import { usePlayers } from "@/hooks";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function Home() {
-	const [playersStorage, setPlayerStorage] = usePlayers();
 	const router = useRouter();
-
-	const [players, setPlayers] = useState<Players[]>([]);
-
-	useEffect(() => {
-		setPlayers(playersStorage);
-	}, [playersStorage]);
+	const { players, setPlayers } = usePlayers();
 
 	return (
 		<main className="relative h-screen bg-[url('https://images2.alphacoders.com/128/thumb-1920-1281008.jpg')]">
@@ -31,6 +23,8 @@ export default function Home() {
 							<p className="text-lg">{player.name}</p>
 							<button
 								onClick={() => {
+									if (!setPlayers) return;
+
 									setPlayers((prev) =>
 										prev.filter((val) => val.id !== player.id),
 									);
@@ -63,7 +57,9 @@ export default function Home() {
 						disabled={players.length === 0}
 						className="bg-white hover:bg-gray-200 disabled:hover:bg-white disabled:opacity-20 w-64 text-gray-800 font-bold py-2 px-4 rounded"
 						onClick={() => {
-							setPlayerStorage(players);
+							if (!setPlayers) return;
+
+							setPlayers(players);
 							router.push("/game");
 						}}
 					>
