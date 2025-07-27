@@ -17,11 +17,11 @@
   }
   
   body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
+    background: radial-gradient(circle at 10% 20%, rgb(8, 1, 37) 0%, rgb(30, 30, 49) 96%);
   }
+/* 
+  @layer utilities {
+    .bg-gradient {
+      background: radial-gradient(circle at 10% 20%, rgb(0, 0, 0) 0%, rgb(64, 64, 64) 90.2%);
+    }
+  } */
