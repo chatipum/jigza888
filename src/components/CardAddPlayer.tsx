@@ -1,67 +1,53 @@
 import { usePlayers } from "@/hooks";
+import { last, sortBy } from "es-toolkit";
 import { useState } from "react";
+import IconPlus from "./icons/Plus";
 
 export default function CardAddPlayer() {
 	const { players, setPlayers } = usePlayers();
 
-	const [newPlayerName, setNewPlayerName] = useState<string>("");
+	const [playerName, setPlayerName] = useState<string>("");
+
+	const onClickAddPlayer = () => {
+		const sortPlayersById = sortBy(players, ["id"]);
+		const lastPlayerId = last(sortPlayersById)?.id ?? 0;
+
+		if (setPlayers) {
+			setPlayers((prev) => [
+				...prev,
+				{
+					id: lastPlayerId + 1,
+					name: playerName,
+					score: 0,
+				},
+			]);
+		}
+
+		setPlayerName("");
+	};
 
 	return (
-		<div className="w-full bg-black rounded-lg backdrop-blur-md bg-opacity-30 border border-gray-100 p-4">
+		<div className="w-full bg-black rounded-3xl backdrop-blur-md bg-opacity-30 border border-gray-600 p-4">
 			<div className="pb-4 flex flex-row justify-between items-center">
-				<h3 className="text-3xl">Add Player</h3>
+				<h3 className="text-3xl text-black dark:text-white">Add Player</h3>
 				<button
 					type="button"
-					disabled={!newPlayerName}
-					className="rounded-full bg-white h-8 w-8 flex justify-center items-center disabled:opacity-20"
-					onClick={(e) => {
-						e.preventDefault();
-
-						const lastPlayer =
-							players.length === 1
-								? players[0]
-								: players.sort((a, b) => a.id - b.id)[players.length - 1];
-
-						if (lastPlayer && setPlayers) {
-							setPlayers((prev) => [
-								...prev,
-								{
-									id: lastPlayer.id + 1,
-									name: newPlayerName,
-									score: 0,
-								},
-							]);
-						}
-
-						setNewPlayerName("");
-					}}
+					disabled={!playerName}
+					className="disabled:opacity-20 ease-in duration-200"
+					onClick={onClickAddPlayer}
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						strokeWidth="2"
-						stroke="currentColor"
-						className="size-8 text-black"
-					>
-						<title>icon-plus</title>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							d="M12 4.5v15m7.5-7.5h-15"
-						/>
-					</svg>
+					<IconPlus className="size-8 text-black dark:text-white" />
 				</button>
 			</div>
 			<div>
 				<input
-					value={newPlayerName}
-					className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					value={playerName}
+					className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-center"
 					id="player-name"
 					type="text"
 					placeholder="player name"
 					onChange={(e) => {
-						setNewPlayerName(e.target.value);
+						setPlayerName(e.target.value);
 					}}
 				/>
 			</div>

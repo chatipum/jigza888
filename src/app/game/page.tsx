@@ -10,6 +10,8 @@ import { useMemo, useRef, useState } from "react";
 export default function PageGame() {
 	const { players, setPlayers } = usePlayers();
 
+	// const userId = null;
+
 	const [choiceList, setChoiceList] = useState<number[]>([0]);
 	const [score, setScore] = useState<number>(100);
 	const [image, setImage] = useState<string | null>(null);
@@ -63,11 +65,13 @@ export default function PageGame() {
 		[players],
 	);
 
+	// if (!userId) throw Error("foo");
+
 	return (
 		<main className="flex flex-row justify-center h-screen bg-[url('https://images2.alphacoders.com/128/thumb-1920-1281008.jpg')]">
 			<article className="container max-w-4xl mx-auto space-y-4 w-2/3">
 				<div className="flex flex-shrink justify-between pt-4">
-					<div className="flex flex-row space-x-4">
+					<div className="flex flex-row space-x-4 text-white">
 						<div className="text-3xl bg-black/80 shadow-white shadow-lg rounded-lg p-2 w-48 flex flex-row justify-between">
 							<span>Point:</span>
 							<span>{score}</span>
@@ -186,14 +190,14 @@ export default function PageGame() {
 											}
 										}}
 									>
-										<p>{choice}</p>
+										<p className="text-white">{choice}</p>
 									</button>
 								))}
 							</div>
 						</div>
 					) : (
 						<div className="flex items-center justify-center">
-							<div className="w-64 h-20 border-2 border-dashed rounded-lg bg-black/50 flex justify-center items-center">
+							<div className="text-white w-64 h-20 border-2 border-dashed rounded-lg bg-black/50 flex justify-center items-center">
 								<span>No Image</span>
 							</div>
 						</div>
@@ -322,7 +326,7 @@ export default function PageGame() {
 			</article>
 			<article className="container max-w-4xl mx-auto space-y-4 w-1/3">
 				<div className="flex flex-shrink pt-4 justify-end">
-					<p className="text-3xl bg-black/80 shadow-white shadow-lg rounded-lg p-2 w-48 flex flex-row justify-between">
+					<p className="text-white text-3xl bg-black/80 shadow-white shadow-lg rounded-lg p-2 w-48 flex flex-row justify-between">
 						<span>Scoreboard</span>
 					</p>
 				</div>
